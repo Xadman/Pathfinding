@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Vector3 move = new Vector3(horizontal, 0, vertical);
-        controller.Move(move.normalized * Time.deltaTime * playerSpeed);
+        controller.Move(move.normalized * Time.deltaTime * playerSpeed); // normalized to keep player movement speed consistent
 
         if (move != Vector3.zero)
         {
@@ -45,7 +45,10 @@ public class PlayerMovement : MonoBehaviour
 
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
-    }
+    }/// <summary>
+    /// /Mobile controller methods
+    /// </summary>
+    /// <param name="newMoveDir"></param>
     public void MoveInput(Vector2 newMoveDir) 
     {
         horizontal = newMoveDir.x;
