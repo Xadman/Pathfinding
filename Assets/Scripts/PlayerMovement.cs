@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Changes the height position of the player..
-        if (hasJumped  && groundedPlayer)
+        if (hasJumped && groundedPlayer)
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
             hasJumped = false;
@@ -45,7 +45,22 @@ public class PlayerMovement : MonoBehaviour
 
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
-    }/// <summary>
+
+        SetPlayerPosition();
+    }
+    private void GetPlayerPosition()
+    {
+        transform.position = Player.Instance.currentPosition;
+    }
+
+        private void SetPlayerPosition()
+
+        {
+           Player.Instance.currentPosition = transform.position;
+
+        }
+
+    ///<summary>
     /// /Mobile controller methods
     /// </summary>
     /// <param name="newMoveDir"></param>
@@ -67,6 +82,10 @@ public class PlayerMovement : MonoBehaviour
     public void OnJump(InputValue value)
     {
         JumpInput(value.isPressed);
+    }
+    private void OnApplicationQuit()
+    {
+        SetPlayerPosition();
     }
 }
 

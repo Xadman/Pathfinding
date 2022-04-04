@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public static Player Instance
     {
         get { return instance; }
-     
+
     }
 
     public int level;
@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        if( instance != null && instance != this)
+        if (instance != null && instance != this)
         {
             Destroy(this.gameObject);
         }
@@ -37,5 +37,17 @@ public class Player : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    public void LoadPlayerData(SaveData data)
+
+    {
+        level = data.level;
+        xpPoints = data.xpPoints;
+        currentPosition = new Vector3(data.currentPositionX, data.currentPositionY, data.currentPositionZ);
+    }
+
+private void OnApplicationQuit()
+    {
+        SaveSystem.SavePlayer(instance);
+    }
 }
 
