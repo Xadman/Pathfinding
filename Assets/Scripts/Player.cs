@@ -15,10 +15,11 @@ public class Player : MonoBehaviour
     public int level;
     public int xpPoints;
     public Vector3 currentPosition;
+    public int coins;
 
     public Player(Player player)
     {
-
+        coins = player.coins;
         level = player.level;
         xpPoints = player.xpPoints;
         currentPosition = player.currentPosition;
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
     public void LoadPlayerData(SaveData data)
 
     {
+        coins = data.coins;
         level = data.level;
         xpPoints = data.xpPoints;
         currentPosition = new Vector3(data.currentPositionX, data.currentPositionY, data.currentPositionZ);

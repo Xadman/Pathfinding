@@ -18,15 +18,24 @@ public class MobileDisableAutoSwitchControls : MonoBehaviour
 #if (UNITY_IOS || UNITY_ANDROID)
 
     [Header("Target")]
-    public PlayerInput playerInput;
+    private PlayerInput playerInput;
 
     void Start()
     {
+        playerInput = GameObject.FindWithTag("Player").GetComponent<PlayerInput>();
         DisableAutoSwitchControls();
+    }
+
+    private void update()
+    {
+      if(playerInput == null)
+        playerInput = GameObject.FindWithTag("Player").GetComponent<PlayerInput>();
+
     }
 
     void DisableAutoSwitchControls()
     {
+       if(playerInput != null)
         playerInput.neverAutoSwitchControlSchemes = true;
     }
 #else

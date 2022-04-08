@@ -6,7 +6,19 @@ namespace StarterAssets
     {
 
         [Header("Output")]
-        public  PlayerMovement starterAssetsInputs;
+        private PlayerMovement starterAssetsInputs;
+
+        private void Start()
+        {
+            starterAssetsInputs = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
+
+        }
+        private void Update()
+        {
+           if (starterAssetsInputs == null)
+                starterAssetsInputs = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
+
+        }
 
         public void VirtualMoveInput(Vector2 virtualMoveDirection)
         {
