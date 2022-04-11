@@ -5,8 +5,9 @@ public class SaveData
 {
     public int level;
     public int xpPoints;
-    public float currentPositionX, currentPositionY, currentPositionZ;
     public int coins;
+    public float currentPositionX, currentPositionY, currentPositionZ;
+    
 
     public SaveData()
     {
