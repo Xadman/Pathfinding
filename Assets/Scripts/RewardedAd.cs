@@ -8,34 +8,37 @@ namespace Unity.Example
     public class RewardedAd : MonoBehaviour
     {
         IRewardedAd ad; 
-        string androidAdUnitId = "Interstitial_Android";
+        string androidAdUnitId = "Rewarded_Android";
         string androidGameId = "4699254";
-
-        string iosAdUnitId = "Interstitial_iOS";
+        string iosAdUnitId = "Rewarded_iOS";
         string iosGameId = "4699255";
         string gameId, adUnitId;
 
+        private bool adSetup;
 
-        private void PlayAd()
+        public void playAd()
         {
             if(UnityServices.State == ServicesInitializationState.Initialized)
             {
-
+                if (adSetup)
+                {
+                    ad.Load();
+                }
+                else
+                {
+                    InitializationComplete();
+                }
+           
             }else if(UnityServices.State == ServicesInitializationState.Uninitialized)
             {
                 InitServices();
             }
-
-            }
-  
         }
 
         public async void InitServices()
         {
             try
-            {
-
-
+            { 
                 // Instantiate an interstitial ad object with platform-specific Ad Unit ID
                 if (Application.platform == RuntimePlatform.Android)
                 {
@@ -65,27 +68,6 @@ namespace Unity.Example
 
                 }
 #endif
-
-
-                InitializationComplete();
-            }
-            catch (Exception e)
-            {
-                InitializationFailed(e);
-            }
-        }
-
-        string adUnitId = "Rewarded_Android";
-        string gameId = "4699254";
-
-        public async void InitServices()
-        {
-            try
-            {
-                InitializationOptions initializationOptions = new InitializationOptions();
-                initializationOptions.SetGameId(gameId);
-                await UnityServices.InitializeAsync(initializationOptions);
-
                 InitializationComplete();
             }
             catch (Exception e)
@@ -96,9 +78,17 @@ namespace Unity.Example
 
         public void SetupAd()
         {
-            //Create
+
+            adSetup = true;
+
+            //create
+#if UNITY_EDITOR
+            ad = MediationService.Instance.CreateRewardedAd("myExampleAdUnitId");
+
+#else
             ad = MediationService.Instance.CreateRewardedAd(adUnitId);
 
+#endif
             //Subscribe to events
             ad.OnLoaded += AdLoaded;
             ad.OnFailedLoad += AdFailedLoad;
@@ -135,6 +125,7 @@ namespace Unity.Example
         void AdLoaded(object sender, EventArgs args)
         {
             Debug.Log("Ad loaded");
+            ShowAd();
         }
 
         void AdFailedLoad(object sender, LoadErrorEventArgs args)
@@ -151,7 +142,7 @@ namespace Unity.Example
         void AdClosed(object sender, EventArgs e)
         {
             // Pre-load the next ad
-            ad.Load();
+            
             Debug.Log("Ad has closed");
             // Execute logic after an ad has been closed.
         }
@@ -176,9 +167,9 @@ namespace Unity.Example
         void UserRewarded(object sender, RewardEventArgs e)
         {
             Debug.Log($"Received reward: type:{e.Type}; amount:{e.Amount}");
+            Player.Instance.GrantCoins(10);
         }
 
     }
 }
-    }
-}
+    
