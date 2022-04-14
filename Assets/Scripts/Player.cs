@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Com.KevinNipper.Pathfinding;
 public class Player : MonoBehaviour
 {
     private static Player instance;
@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
         SaveSystem.SavePlayer(this);
     }
 
-    public void LoadPlayerData(SaveData data)
+    public void LoadPlayerData(SavePlayerData data)
 
     {
         coins = data.coins;
