@@ -6,9 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+    public GameObject restoreButton;
+
+    private void Awake()
+    {
+#if UNITY_IOS
+     restoreButton.SetActive(true);
+
+#else
+        restoreButton.SetActive(false);
+#endif
+   
+    }
+
     private void Start()
     {
-        
+        Player.Instance.LoadPlayerData(SaveSystem.LoadPlayer());
     }
     public  void LoadGameScene()
     {

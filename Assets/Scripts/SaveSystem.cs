@@ -1,7 +1,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-
+using Com.KevinNipper.Pathfinding;
 public static class SaveSystem
 {
 
@@ -10,32 +10,32 @@ public static class SaveSystem
 
 
         BinaryFormatter formatter = new BinaryFormatter();
-        string path = Application.persistentDataPath + "/playerData.hax";
+        string path = Application.persistentDataPath + "/playerData.dot";
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        SaveData data = new SaveData(player);
+        SavePlayerData data = new SavePlayerData(player);
 
         formatter.Serialize(stream, data);
         stream.Close();
     }
 
 
-    public static SaveData LoadPlayer()
+    public static SavePlayerData LoadPlayer()
     {
-        string path = Application.persistentDataPath + "/playerData.hax";
+        string path = Application.persistentDataPath + "/playerData.dot";
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            SaveData data = formatter.Deserialize(stream) as SaveData;
+            SavePlayerData data = formatter.Deserialize(stream) as SavePlayerData;
             stream.Close();
 
             return data;
         }
         else
         {
-            SaveData data = new SaveData();
+            SavePlayerData data = new SavePlayerData();
             return data;
         }
     }
