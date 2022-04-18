@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class SigninManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void SignIn()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        CloudSaveSample.CloudSaveSample.Instance.SignInAnonymously();
     }
 }

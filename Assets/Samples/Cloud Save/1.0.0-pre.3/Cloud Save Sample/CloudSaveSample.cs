@@ -20,10 +20,10 @@ namespace CloudSaveSample
 
         public string playerId;
         private Player player;
-        private async void Awake()
+        private void Awake()
         {
 
-            if(instance != null && instance != this)
+            if (instance != null && instance != this)
             {
                 Destroy(this.gameObject);
             }
@@ -31,8 +31,13 @@ namespace CloudSaveSample
             {
                 instance = this;
             }
-            DontDestroyOnLoad(this.gameObject);  
+            DontDestroyOnLoad(this.gameObject);
 
+            
+        }
+
+        public async void SignInAnonymously() 
+        {
             player = Player.Instance;
             // Cloud Save needs to be initialized along with the other Unity Services that
             // it depends on (namely, Authentication), and then the user must sign in.
@@ -52,24 +57,29 @@ namespace CloudSaveSample
             playerId = AuthenticationService.Instance.PlayerId;
 
 
-            // Retrieve saved player data
-            SavePlayerData incomingSample = await RetrieveSpecificData<SavePlayerData>("object_key");
-            Debug.Log($"Loaded sample object: {incomingSample.level}, {incomingSample.coins}, {incomingSample.xpPoints}");
-
-
-            if (incomingSample != null)
-                player.LoadPlayerData(incomingSample); // loads cloud player data.
+            try
             {
+                // Retrieve saved player data
+                SavePlayerData incomingSample = await RetrieveSpecificData<SavePlayerData>("object_key");
+                Debug.Log($"Loaded sample object: {incomingSample.playerId}");
+                if (incomingSample != null)
+                    player.LoadPlayerData(incomingSample); // loads cloud player data.
+            }
+            catch {
                 try
-                {       // loads local player data.
+                {
+                    // loads local player data.
                     player.LoadPlayerData(SaveSystem.LoadPlayer(playerId));
                 }
                 catch
-                { 
+                {
                     //creates new player data.
                     SavePlayerData data = new SavePlayerData(playerId);
                     player.LoadPlayerData(data);
+
+
                 }
+    
                 }
             Login();
         }
