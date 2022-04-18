@@ -62,7 +62,7 @@ namespace CloudSaveSample
             {
                 try
                 {       // loads local player data.
-                    player.LoadPlayerData(SaveSystem.LoadPlayer());
+                    player.LoadPlayerData(SaveSystem.LoadPlayer(playerId));
                 }
                 catch
                 { 

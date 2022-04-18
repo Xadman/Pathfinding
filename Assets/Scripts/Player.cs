@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
         get { return instance; }
 
     }
+    public int level;
     public string playerId;
     public int xpPoints;
     public Vector3 currentPosition;
@@ -44,9 +45,9 @@ public class Player : MonoBehaviour
     {
         coins += coinsToGrant;
         SaveSystem.SavePlayer(this);
+      CloudSaveSample.CloudSaveSample.Instance.SaveCloudData();
     }
-
-    public void LoadPlayerData(SavePlayerData data)
+    public  void LoadPlayerData(SavePlayerData data)
 
     {
         playerId = data.playerId;
@@ -70,7 +71,7 @@ public class Player : MonoBehaviour
 private void OnApplicationQuit()
     {
         SaveSystem.SavePlayer(instance);
-        CloudSaveSample.CloudSaveSample.
+        CloudSaveSample.CloudSaveSample.Instance.SaveLogOut();
     }
 }
 

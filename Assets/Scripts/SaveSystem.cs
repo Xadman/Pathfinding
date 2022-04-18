@@ -20,7 +20,7 @@ public static class SaveSystem
     }
 
 
-    public static SavePlayerData LoadPlayer()
+    public static SavePlayerData LoadPlayer(string playerId)
     {
         string path = Application.persistentDataPath + "/playerData.dot";
         if (File.Exists(path))
@@ -35,7 +35,7 @@ public static class SaveSystem
         }
         else
         {
-            SavePlayerData data = new SavePlayerData();
+            SavePlayerData data = new SavePlayerData(playerId);
             return data;
         }
     }
