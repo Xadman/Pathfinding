@@ -11,14 +11,14 @@ public class Player : MonoBehaviour
         get { return instance; }
 
     }
-
-    public int level;
+    public string playerId;
     public int xpPoints;
     public Vector3 currentPosition;
     public int coins;
 
     public Player(Player player)
     {
+        playerId = player.playerId;
         coins = player.coins;
         level = player.level;
         xpPoints = player.xpPoints;
@@ -49,16 +49,28 @@ public class Player : MonoBehaviour
     public void LoadPlayerData(SavePlayerData data)
 
     {
+        playerId = data.playerId;
         coins = data.coins;
         level = data.level;
         xpPoints = data.xpPoints;
         currentPosition = new Vector3(data.currentPositionX, data.currentPositionY, data.currentPositionZ);
-        coins = data.coins;
+     
+    }
+
+    public void ResetPlayerData()
+    {
+        playerId = "";
+        coins = 0;
+        level = 1;
+        xpPoints = 0;
+        currentPosition = new Vector3(0, 1.3f, 0);
+       
     }
 
 private void OnApplicationQuit()
     {
         SaveSystem.SavePlayer(instance);
+        CloudSaveSample.CloudSaveSample.
     }
 }
 

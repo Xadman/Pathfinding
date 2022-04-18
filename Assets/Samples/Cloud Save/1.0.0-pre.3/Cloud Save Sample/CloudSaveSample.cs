@@ -6,25 +6,108 @@ using Unity.Services.CloudSave;
 using Unity.Services.Core;
 using UnityEngine;
 using Com.KevinNipper.Pathfinding;
+using UnityEngine.SceneManagement;
 
-namespace CloudSaveSample
+namespace CloudSaveSample 
 {
-    
+
     public class CloudSaveSample : MonoBehaviour
     {
+        private static CloudSaveSample instance;
+
+        public static CloudSaveSample Instance {  get { return instance; } }
+
+
+        public string playerId;
+        private Player player;
         private async void Awake()
         {
+
+            if(instance != null && instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                instance = this;
+            }
+            DontDestroyOnLoad(this.gameObject);  
+
+            player = Player.Instance;
             // Cloud Save needs to be initialized along with the other Unity Services that
             // it depends on (namely, Authentication), and then the user must sign in.
-            await UnityServices.InitializeAsync();
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            if (UnityServices.State == ServicesInitializationState.Uninitialized)
+            {
+                await UnityServices.InitializeAsync();
+
+            }
+            if (AuthenticationService.Instance.IsSignedIn)
+            {
+                //Continue to Login/Load Player Data
+            }
+            else
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
             Debug.Log("Signed in?");
+            playerId = AuthenticationService.Instance.PlayerId;
 
+
+            // Retrieve saved player data
             SavePlayerData incomingSample = await RetrieveSpecificData<SavePlayerData>("object_key");
             Debug.Log($"Loaded sample object: {incomingSample.level}, {incomingSample.coins}, {incomingSample.xpPoints}");
+
+
+            if (incomingSample != null)
+                player.LoadPlayerData(incomingSample); // loads cloud player data.
+            {
+                try
+                {       // loads local player data.
+                    player.LoadPlayerData(SaveSystem.LoadPlayer());
+                }
+                catch
+                { 
+                    //creates new player data.
+                    SavePlayerData data = new SavePlayerData(playerId);
+                    player.LoadPlayerData(data);
+                }
+                }
+            Login();
         }
-            
+        private void Login()
+        {
+            SceneManager.LoadScene(0);
+        }
+        private void LoadSignInLevel()
+        {
+            SceneManager.LoadScene(2);
+        }
+
+        private void logout()
+        {
+            SaveLogOut();
+
+            LoadSignInLevel();
+        }
+
+        public async void SaveCloudData()
+        {
+            if (AuthenticationService.Instance.IsSignedIn)
+            {
+                SavePlayerData data = new SavePlayerData(player);
+                await ForceSaveObjectData(playerId, data);
+            }
+        }
+            public void SaveLogOut()
+        {
+            SaveCloudData();
+
+            if (AuthenticationService.Instance.IsSignedIn)
+            {
+                AuthenticationService.Instance.SignOut();
+            }
+
+            player.ResetPlayerData();
+        }
           
         private async Task ListAllKeys()
         {
