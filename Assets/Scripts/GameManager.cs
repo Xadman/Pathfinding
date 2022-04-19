@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        playerData = GameObject.FindWithTag("PlayerData").GetComponent<Player>();
+        playerData = Player.Instance;
     }
 
     public void SavePlayerData()
